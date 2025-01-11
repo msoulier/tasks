@@ -1,5 +1,7 @@
 module github.com/msoulier/tasks
 
-go 1.21.5
+go 1.23.4
 
-require github.com/msoulier/go-taskwarrior v0.0.0-20210715203638-6368e6412230
+require github.com/msoulier/go-taskwarrior v0.0.0-unpublished
+
+replace github.com/msoulier/go-taskwarrior v0.0.0-unpublished => ../go-taskwarrior
