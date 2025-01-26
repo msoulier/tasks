@@ -16,14 +16,16 @@ var (
     debug bool = false
     markdown bool = false
     depgraph bool = false
+    orgmode bool = false
 )
 
 func init() {
     flag.BoolVar(&debug, "debug", false, "Debug logging")
     flag.BoolVar(&markdown, "markdown", false, "Output a markdown table (default)")
     flag.BoolVar(&depgraph, "depgraph", false, "Output a dependency graph in graphviz dot format")
+    flag.BoolVar(&orgmode, "orgmode", false, "Output tasks in orgmode format")
     flag.Parse()
-    if !markdown && !depgraph {
+    if !markdown && !depgraph && !orgmode {
         markdown = true
     }
 }
@@ -107,5 +109,18 @@ func main() {
             fmt.Printf("%s\n", edge)
         }
         fmt.Println("}")
+    } else if orgmode {
+        fmt.Printf("* Tasks\n")
+        for _, task := range tw.Tasks {
+            if task.Status != "completed" && task.Status != "deleted" {
+                status := ""
+                if task.Status == "pending" {
+                    status = "TODO"
+                }
+                fmt.Printf("** %s %s\n", status, task.Description)
+                fmt.Printf("due: %s\n", task.Due)
+                // fmt.Printf("scheduled?: %s\n", task.Scheduled) FIXME: need a Scheduled in go-taskwarrior
+            }
+        }
     }
 }
